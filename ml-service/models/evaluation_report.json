@@ -1,0 +1,13 @@
+{
+  "accuracy": 0.9643,
+  "precision": 1.0,
+  "recall": 0.75,
+  "f1": 0.8571,
+  "auc": 1.0,
+  "cv_auc_mean": 1.0,
+  "cv_auc_std": 0.0,
+  "train_samples": 112,
+  "test_samples": 28,
+  "positive_samples": 20,
+  "negative_samples": 120
+}

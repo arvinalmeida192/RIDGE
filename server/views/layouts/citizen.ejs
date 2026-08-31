@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="<%= lang || 'en' %>">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= locale?.portal_title || 'RIDGE Citizen' %> — RIDGE</title>
+  <link rel="stylesheet" href="/css/ridge.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+  <script defer src="https://unpkg.com/alpinejs@3.14.1/dist/cdn.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body class="topo-bg">
+<div class="admin-layout">
+  <aside class="sidebar" style="display:flex;flex-direction:column">
+    <div class="sidebar-logo">⛰ RIDGE</div>
+    <p class="sidebar-subtitle"><%= locale.portal_title %></p>
+    <nav>
+      <a href="/citizen<%= zoneQuery %>" class="<%= section === 'home' ? 'active' : '' %>"><%= locale.nav_home %></a>
+      <a href="/citizen/alerts<%= zoneQuery %>" class="<%= section === 'alerts' ? 'active' : '' %>"><%= locale.nav_alerts %></a>
+      <a href="/citizen/safety<%= zoneQuery %>" class="<%= section === 'safety' ? 'active' : '' %>"><%= locale.nav_safety %></a>
+      <a href="/citizen/subscribe<%= zoneQuery %>" class="<%= section === 'subscribe' ? 'active' : '' %>"><%= locale.nav_subscribe %></a>
+      <a href="/citizen/news<%= zoneQuery %>" class="<%= section === 'news' ? 'active' : '' %>"><%= locale.nav_news %></a>
+      <a href="/citizen/info<%= zoneQuery %>" class="<%= section === 'info' ? 'active' : '' %>"><%= locale.nav_info %></a>
+      <% if (user?.role === 'citizen' && user?.operationalStatus !== 'approved') { %>
+      <a href="/citizen/access<%= zoneQuery %>" class="<%= section === 'access' ? 'active' : '' %>"><%= locale.nav_access %></a>
+      <% } %>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="lang-toggle">
+        <a href="?lang=en&zone=<%= zone?.id %>" class="btn btn-ghost <%= lang === 'en' ? 'active-lang' : '' %>">EN</a>
+        <a href="?lang=as&zone=<%= zone?.id %>" class="btn btn-ghost <%= lang === 'as' ? 'active-lang' : '' %>">অসমীয়া</a>
+      </div>
+      <% if (user?.role === 'admin' || user?.role === 'operator') { %>
+      <a href="/dashboard" class="sidebar-link-muted"><%= locale.admin_link %></a>
+      <% } %>
+      <a href="/logout" class="sidebar-link-danger"><%= locale.logout %></a>
+    </div>
+  </aside>
+  <main class="main-content">
+    <%- body %>
+  </main>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="/js/ridge-map.js"></script>
+<script src="/js/ridge-charts.js"></script>
+<script src="/js/ridge-citizen.js"></script>
+</body>
+</html>

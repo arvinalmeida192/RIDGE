@@ -1,0 +1,66 @@
+<div class="topbar">
+  <div>
+    <h1 class="page-title"><%= locale.nav_subscribe %></h1>
+    <p class="page-subtitle"><%= locale.subscribe_subtitle %></p>
+  </div>
+</div>
+
+<div class="grid-main-side">
+  <div class="glass-panel" style="padding:1.5rem">
+    <h3 style="margin-bottom:1rem"><%= locale.subscribe_alerts %></h3>
+    <p style="font-size:0.875rem;color:var(--ridge-muted);margin-bottom:1rem"><%= locale.subscribe_help %></p>
+
+    <form id="subscribe-form" class="subscribe-form" data-zone-id="<%= zone?.id %>"
+          data-msg-success="<%= locale.subscribe_success %>"
+          data-msg-error="<%= locale.subscribe_error %>"
+          data-msg-phone-invalid="<%= locale.phone_invalid %>"
+          data-msg-unsub-success="<%= locale.unsubscribe_success %>"
+          data-msg-unsub-error="<%= locale.unsubscribe_error %>"
+          data-msg-network="<%= locale.network_error %>">
+      <div class="form-group">
+        <label for="phone"><%= locale.phone_label %></label>
+        <input type="tel" id="phone" name="phone" required
+               placeholder="<%= locale.phone_placeholder %>"
+               pattern="^(\+91|91)?[6-9]\d{9}$"
+               value="<%= subscriptions[0]?.phone || '' %>">
+        <span class="form-hint"><%= locale.phone_hint %></span>
+      </div>
+      <div id="subscribe-message" class="form-message" hidden></div>
+      <div style="display:flex;gap:0.5rem;margin-top:1rem">
+        <button type="submit" class="btn btn-primary"><%= locale.subscribe %></button>
+        <% if (subscriptions.length) { %>
+        <button type="button" id="unsubscribe-btn" class="btn btn-ghost" data-phone="<%= subscriptions[0].phone %>">
+          <%= locale.unsubscribe %>
+        </button>
+        <% } %>
+      </div>
+    </form>
+  </div>
+
+  <div class="glass-panel" style="padding:1.5rem">
+    <h3 style="margin-bottom:1rem"><%= locale.subscription_status %></h3>
+    <% if (subscriptions.length) { %>
+      <% subscriptions.forEach(sub => { %>
+      <div class="subscription-card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="risk-badge risk-low"><%= locale.status_active %></span>
+          <span style="font-size:0.8rem;color:var(--ridge-muted)"><%= zone?.name %></span>
+        </div>
+        <p style="font-size:1.1rem;margin:0.5rem 0" class="tabular-nums"><%= sub.phone %></p>
+        <p style="font-size:0.75rem;color:var(--ridge-muted)"><%= locale.sms_warning_only %></p>
+      </div>
+      <% }) %>
+    <% } else { %>
+      <p style="color:var(--ridge-muted);font-size:0.875rem"><%= locale.not_subscribed %></p>
+    <% } %>
+
+    <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--ridge-border)">
+      <h4 style="font-size:0.85rem;margin-bottom:0.5rem"><%= locale.how_it_works %></h4>
+      <ol class="guidance-list numbered">
+        <li><%= locale.subscribe_step_1 %></li>
+        <li><%= locale.subscribe_step_2 %></li>
+        <li><%= locale.subscribe_step_3 %></li>
+      </ol>
+    </div>
+  </div>
+</div>

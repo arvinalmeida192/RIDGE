@@ -1,0 +1,13 @@
+node_modules
+dist
+.vite
+.DS_Store
+*.local
+.env
+.env.*
+!.env.example
+serviceAccountKey.json
+**/__pycache__
+*.pyc
+.pytest_cache
+.venv

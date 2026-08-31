@@ -1,0 +1,64 @@
+<section class="hero">
+  <h1>Regional Integrated Disaster &amp; Geohazard Early-Warning</h1>
+  <p>
+    Real-time landslide risk monitoring across India's North Eastern Region.
+    Automated alerts and citizen safety tools for communities at risk.
+  </p>
+  <% if (nextUrl) { %>
+  <div class="glass-panel" style="max-width:480px;margin:0 auto 1.5rem;padding:0.75rem 1rem;font-size:0.875rem;color:var(--ridge-muted)">
+    Sign in to access the requested page.
+  </div>
+  <% } %>
+  <div class="hero-actions">
+    <% if (user?.role === 'admin' || user?.role === 'operator') { %>
+    <a href="/dashboard" class="btn btn-primary">Operations Dashboard</a>
+    <a href="/citizen" class="btn btn-ghost">Citizen Portal</a>
+    <% } else if (user?.role === 'citizen') { %>
+    <a href="/citizen" class="btn btn-primary">Citizen Portal</a>
+    <% } else { %>
+    <a href="/login?next=<%= encodeURIComponent(nextUrl && !nextUrl.startsWith('/citizen') ? nextUrl : '/dashboard') %>" class="btn btn-primary">Operations Login</a>
+    <a href="/citizen/login?next=<%= encodeURIComponent(nextUrl && nextUrl.startsWith('/citizen') ? nextUrl : '/citizen') %>" class="btn btn-primary">Citizen Portal</a>
+    <% } %>
+  </div>
+  <% if (!user || user?.role === 'admin' || user?.role === 'operator') { %>
+  <div class="grid-2" style="max-width:520px;margin:1.5rem auto 0;gap:1rem;text-align:left">
+    <a href="/login?next=/dashboard" class="glass-panel" style="padding:1rem;text-decoration:none;color:inherit;display:block">
+      <div style="font-size:0.8rem;font-weight:600;margin-bottom:0.35rem">Operations Login →</div>
+      <% if (authMode?.firebaseEnabled) { %>
+      <div style="font-size:0.75rem;color:var(--ridge-muted)">Sign in with Google or your approved account</div>
+      <% } else { %>
+      <div style="font-size:0.75rem;color:var(--ridge-muted)">Login: <code>admin</code> / <code>admin</code></div>
+      <% } %>
+    </a>
+    <a href="<%= user ? '/citizen' : '/citizen/login?next=/citizen' %>" class="glass-panel" style="padding:1rem;text-decoration:none;color:inherit;display:block">
+      <div style="font-size:0.8rem;font-weight:600;margin-bottom:0.35rem;color:var(--risk-low)">Citizen Portal →</div>
+      <% if (authMode?.firebaseEnabled) { %>
+      <div style="font-size:0.75rem;color:var(--ridge-muted)">Sign in with Google or create an account</div>
+      <% } else { %>
+      <div style="font-size:0.75rem;color:var(--ridge-muted)">Login: <code>user</code> / <code>user</code></div>
+      <% } %>
+    </a>
+  </div>
+  <% } %>
+</section>
+
+<section style="max-width:900px;margin:2rem auto;padding:0 2rem">
+  <div class="grid-4">
+    <div class="glass-panel stat-card" style="text-align:center">
+      <div class="stat-value tabular-nums"><%= stats.totalZones %></div>
+      <div class="stat-label">Zones Monitored</div>
+    </div>
+    <div class="glass-panel stat-card" style="text-align:center">
+      <div class="stat-value tabular-nums" style="color:var(--risk-critical)"><%= stats.activeAlerts %></div>
+      <div class="stat-label">Active Alerts</div>
+    </div>
+    <div class="glass-panel stat-card" style="text-align:center">
+      <div class="stat-value tabular-nums" style="color:var(--risk-high)"><%= stats.highRiskZones %></div>
+      <div class="stat-label">High+ Risk Zones</div>
+    </div>
+    <div class="glass-panel stat-card" style="text-align:center">
+      <div class="stat-value" style="font-size:1.25rem"><%= stats.lastSync %></div>
+      <div class="stat-label">Last Data Sync (IST)</div>
+    </div>
+  </div>
+</section>

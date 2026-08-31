@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/ridge.css">
+</head>
+<body>
+  <main class="status-page">
+    <h1>RIDGE — Phase <%= phase %></h1>
+    <p>Server is running. Alert engine and ML scoring operational.</p>
+    <ul>
+      <li><a href="/api/v1/health">Health Check</a></li>
+      <li><a href="/api/v1/zones">Zones API</a></li>
+      <li><a href="/api/v1/alerts">Alerts API</a></li>
+      <li><a href="/api/v1/alerts/feed?format=html">Alert Feed (HTML)</a></li>
+      <li><a href="/partials/alert-feed">HTMX Alert Partial</a></li>
+      <li><a href="/api/v1/events/alerts">SSE Alert Stream</a></li>
+    </ul>
+  </main>
+</body>
+</html>

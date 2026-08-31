@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> — RIDGE</title>
+  <link rel="stylesheet" href="/css/ridge.css">
+</head>
+<body class="topo-bg">
+<header class="public-header">
+  <a href="/" class="sidebar-logo" style="text-decoration:none">⛰ RIDGE</a>
+  <nav class="public-nav">
+    <% if (user?.role === 'admin' || user?.role === 'operator') { %>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/citizen">Citizen Portal</a>
+    <% } else if (user?.role === 'citizen') { %>
+    <a href="/citizen">Citizen Portal</a>
+    <% } else { %>
+    <a href="/login?next=/dashboard">Operations</a>
+    <a href="/citizen/login?next=/citizen">Citizen Portal</a>
+    <% } %>
+  </nav>
+</header>
+<%- body %>
+<footer style="text-align:center;padding:2rem;color:var(--ridge-muted);font-size:0.8rem">
+  RIDGE — Regional Integrated Disaster &amp; Geohazard Early-Warning System · NER India
+</footer>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<div class="topbar">
+  <div>
+    <h1 class="page-title"><%= locale.nav_alerts %></h1>
+    <p class="page-subtitle"><%= locale.your_area %>: <strong><%= zone?.name %></strong></p>
+  </div>
+</div>
+
+<div class="glass-panel" style="padding:1rem">
+  <div id="citizen-alert-list"
+       hx-get="/partials/citizen-alerts?zone_id=<%= zone?.id %>&lang=<%= lang %>"
+       hx-trigger="every 30s"
+       hx-swap="innerHTML">
+    <%- include('../partials/citizen-alerts', { alerts, locale }) %>
+  </div>
+</div>

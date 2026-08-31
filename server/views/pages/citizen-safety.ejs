@@ -1,0 +1,50 @@
+<div class="topbar">
+  <div>
+    <h1 class="page-title"><%= locale.nav_safety %></h1>
+    <p class="page-subtitle"><%= locale.safety_subtitle %></p>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="glass-panel" style="padding:1.5rem">
+    <h3 style="margin-bottom:1rem;color:var(--risk-low)"><%= locale.safety_guidance %></h3>
+    <ul class="guidance-list">
+      <li><%= locale.guidance_1 %></li>
+      <li><%= locale.guidance_2 %></li>
+      <li><%= locale.guidance_3 %></li>
+      <li><%= locale.guidance_4 %></li>
+      <li><%= locale.guidance_5 %></li>
+    </ul>
+  </div>
+
+  <div class="glass-panel" style="padding:1.5rem">
+    <h3 style="margin-bottom:1rem;color:var(--risk-low)"><%= locale.evacuation %></h3>
+    <% if (evacuation) { %>
+    <dl class="info-dl">
+      <dt><%= locale.evac_centre %></dt>
+      <dd><%= evacuation.centre %></dd>
+      <dt><%= locale.evac_contact %></dt>
+      <dd><%= evacuation.contact %></dd>
+      <dt><%= locale.evac_route %></dt>
+      <dd><%= evacuation.route %></dd>
+    </dl>
+    <% } else { %>
+    <p style="color:var(--ridge-muted)"><%= locale.evac_default %></p>
+    <% } %>
+  </div>
+</div>
+
+<div class="glass-panel" style="padding:1.5rem;margin-top:1.5rem">
+  <h3 style="margin-bottom:1rem;color:var(--risk-low)"><%= locale.emergency_contacts %></h3>
+  <table class="data-table">
+    <thead><tr><th><%= locale.contact_name %></th><th><%= locale.contact_phone %></th></tr></thead>
+    <tbody>
+      <% contacts.forEach(c => { %>
+      <tr>
+        <td><%= c.name %></td>
+        <td><a href="tel:<%= c.phone %>"><%= c.phone %></a></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,76 @@
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    container_name: ridge-postgres
+    environment:
+      POSTGRES_DB: ridge
+      POSTGRES_USER: ridge
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-ridge_dev_password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ridge -d ridge"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: ridge-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  ml-service:
+    build: ./ml-service
+    container_name: ridge-ml
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./server/src/data:/app/server_data:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 120s
+
+  server:
+    build: ./server
+    container_name: ridge-server
+    ports:
+      - "3002:3000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://ridge:${DB_PASSWORD:-ridge_dev_password}@postgres:5432/ridge
+      REDIS_URL: redis://redis:6379
+      ML_SERVICE_URL: http://ml-service:8000
+      NODE_ENV: development
+      PORT: 3000
+      DB_MIGRATE_ON_START: "true"
+      DB_SEED_ON_START: "false"
+      SCORING_ENABLED: "true"
+      ALERTS_ENABLED: "true"
+      NOTIFICATIONS_ENABLED: "true"
+      FIREBASE_SERVICE_ACCOUNT_PATH: /app/firebase-service-account.json
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ml-service:
+        condition: service_healthy
+    volumes:
+      - ./server:/app
+      - ./serviceAccountKey.json:/app/firebase-service-account.json:ro
+      - /app/node_modules
+
+volumes:
+  pgdata:

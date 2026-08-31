@@ -1,0 +1,33 @@
+<div class="topbar">
+  <div>
+    <h1 class="page-title">Alerts</h1>
+    <p class="page-subtitle">Active alerts across monitored zones</p>
+  </div>
+</div>
+
+<div class="glass-panel" style="padding:1rem;margin-bottom:1rem;display:flex;gap:1rem;flex-wrap:wrap">
+  <select name="state"
+          hx-get="/partials/alert-list"
+          hx-target="#alert-list"
+          hx-trigger="change"
+          hx-include="[name='tier']">
+    <option value="">All States</option>
+    <% states.forEach(s => { %>
+    <option value="<%= s %>" <%= filters.state === s ? 'selected' : '' %>><%= s %></option>
+    <% }) %>
+  </select>
+  <select name="tier"
+          hx-get="/partials/alert-list"
+          hx-target="#alert-list"
+          hx-trigger="change"
+          hx-include="[name='state']">
+    <option value="">All Tiers</option>
+    <option value="Warning" <%= filters.tier === 'Warning' ? 'selected' : '' %>>Warning</option>
+    <option value="Watch" <%= filters.tier === 'Watch' ? 'selected' : '' %>>Watch</option>
+    <option value="Advisory" <%= filters.tier === 'Advisory' ? 'selected' : '' %>>Advisory</option>
+  </select>
+</div>
+
+<div id="alert-list">
+  <%- include('../partials/alert-list', { alerts }) %>
+</div>

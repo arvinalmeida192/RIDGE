@@ -1,0 +1,9 @@
+<div class="glass-panel stat-card" style="padding:0.75rem">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <a href="/zones/<%= zone.id %>" style="font-weight:600;color:var(--ridge-text)"><%= zone.name %></a>
+    <span class="risk-badge risk-<%= (zone.riskLevel||'low').toLowerCase().replace(' ','-') %>"><%= zone.riskLevel %></span>
+  </div>
+  <div style="font-size:0.75rem;color:var(--ridge-muted);margin-top:0.25rem">
+    <%= zone.state %> · Score: <%= zone.riskScore?.toFixed(1) %> · Rain: <%= zone.rainfall24h %>mm
+  </div>
+</div>

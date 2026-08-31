@@ -1,0 +1,113 @@
+<div class="topbar">
+  <div>
+    <h1 class="page-title">Operations Dashboard</h1>
+    <p class="page-subtitle">North Eastern Region — Live Risk Overview</p>
+  </div>
+  <div style="display:flex;align-items:center;gap:1rem" x-data="dataRefresh()">
+    <span class="stat-label">Last sync (IST): <%= stats.lastSync %></span>
+    <% if (user?.role === 'admin') { %>
+    <button @click="refresh()" :disabled="loading" class="btn btn-primary" style="font-size:0.8rem">
+      <span x-text="loading ? 'Refreshing…' : '↻ Refresh All Data'"></span>
+    </button>
+    <% } %>
+    <span x-show="message" x-text="message" :class="error ? 'form-message-error' : 'form-message-success'"
+          style="font-size:0.75rem;padding:0.25rem 0.5rem;border-radius:0.25rem"></span>
+  </div>
+</div>
+
+<div class="grid-4" style="margin-bottom:1.5rem">
+  <div class="glass-panel stat-card">
+    <div class="stat-label">Zones Monitored</div>
+    <div class="stat-value tabular-nums"><%= stats.totalZones %></div>
+  </div>
+  <div class="glass-panel stat-card">
+    <div class="stat-label">Active Alerts</div>
+    <div class="stat-value tabular-nums" style="color:var(--risk-critical)"><%= stats.activeAlerts %></div>
+  </div>
+  <div class="glass-panel stat-card">
+    <div class="stat-label">High+ Risk Zones</div>
+    <div class="stat-value tabular-nums" style="color:var(--risk-high)"><%= stats.highRiskZones %></div>
+  </div>
+  <div class="glass-panel stat-card">
+    <div class="stat-label">Data Pipeline</div>
+    <div class="stat-value" style="font-size:1.1rem;color:var(--risk-low)">Operational</div>
+  </div>
+</div>
+
+<div class="grid-main-side">
+  <div class="glass-panel" style="padding:1rem">
+    <h2 style="margin-bottom:0.5rem">NER Risk Map</h2>
+    <p style="font-size:0.75rem;color:var(--ridge-muted);margin-bottom:0.75rem">Live zone risk · Toggle heatmap / markers · Layer controls</p>
+    <div id="ridge-map" class="ridge-map" data-map-config='<%= JSON.stringify(mapData) %>'></div>
+    <div style="margin-top:0.5rem;display:flex;gap:0.5rem" x-data="{ mode: 'heatmap' }">
+      <button @click="mode='heatmap'; window.RidgeMap?.setMode('heatmap')" class="btn btn-ghost" style="font-size:0.75rem">Heatmap</button>
+      <button @click="mode='markers'; window.RidgeMap?.setMode('markers')" class="btn btn-ghost" style="font-size:0.75rem">Markers</button>
+    </div>
+  </div>
+
+  <div class="glass-panel" style="padding:1rem;display:flex;flex-direction:column">
+    <h2 style="margin-bottom:0.75rem">Alert Feed</h2>
+    <div id="alert-feed"
+         hx-get="/partials/alert-feed"
+         hx-trigger="every 30s"
+         hx-swap="innerHTML"
+         style="flex:1;overflow-y:auto;max-height:420px">
+      <%- include('../partials/alert-feed', { alerts }) %>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2" style="margin-top:1.5rem">
+  <div class="glass-panel" style="padding:1rem">
+    <h3 style="margin-bottom:0.75rem">Risk Distribution</h3>
+    <div class="chart-container">
+      <canvas id="chart-risk-dist" data-chart='<%= JSON.stringify(riskDist) %>'></canvas>
+    </div>
+  </div>
+  <div class="glass-panel" style="padding:1rem">
+    <h3 style="margin-bottom:0.75rem">Rainfall vs Risk</h3>
+    <div class="chart-container">
+      <canvas id="chart-rainfall" data-chart='<%= JSON.stringify(rainfall) %>'></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+  function dataRefresh() {
+    return {
+      loading: false,
+      message: '',
+      error: false,
+      async refresh() {
+        this.loading = true
+        this.message = ''
+        try {
+          const res = await fetch('/api/v1/system/refresh', {
+            method: 'POST',
+            credentials: 'include',
+          })
+          const data = await res.json()
+          if (res.ok) {
+            this.error = false
+            this.message = 'Data refreshed'
+            setTimeout(() => location.reload(), 1200)
+          } else {
+            this.error = true
+            this.message = data.error || 'Refresh failed'
+          }
+        } catch {
+          this.error = true
+          this.message = 'Network error'
+        } finally {
+          this.loading = false
+        }
+      },
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    RidgeMap.init('ridge-map');
+    RidgeCharts.riskDistribution('chart-risk-dist');
+    RidgeCharts.rainfallCorrelation('chart-rainfall');
+  });
+</script>

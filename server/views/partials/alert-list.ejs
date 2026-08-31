@@ -1,0 +1,29 @@
+<div class="glass-panel" style="overflow:hidden">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Tier</th>
+        <th>Zone</th>
+        <th>State</th>
+        <th>Risk</th>
+        <th>Issued (IST)</th>
+        <th>Guidance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!alerts.length) { %>
+      <tr><td colspan="6" style="text-align:center;color:var(--ridge-muted)">No alerts found</td></tr>
+      <% } %>
+      <% alerts.forEach(alert => { %>
+      <tr class="tier-<%= alert.tier.toLowerCase() %>">
+        <td><span class="risk-badge risk-<%= alert.tier === 'Warning' ? 'critical' : alert.tier === 'Watch' ? 'moderate' : 'low' %>"><%= alert.tier %></span></td>
+        <td><a href="/zones/<%= alert.zoneId %>"><%= alert.zoneName %></a></td>
+        <td><%= alert.state %></td>
+        <td><%= alert.riskLevel %> (<%= alert.riskScore?.toFixed(1) %> / 5)</td>
+        <td class="tabular-nums" style="font-size:0.8rem"><%= formatIST(alert.issuedAt) %></td>
+        <td style="font-size:0.8rem;color:var(--ridge-muted);max-width:320px"><%= alert.guidance %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

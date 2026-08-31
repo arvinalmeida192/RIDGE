@@ -1,0 +1,75 @@
+<div class="topbar">
+  <div>
+    <h1 class="page-title"><%= locale.nav_home %></h1>
+    <p class="page-subtitle"><%= locale.your_area %>: <strong><%= zone?.name %></strong> · <%= zone?.state %></p>
+  </div>
+  <form method="get" action="/citizen" class="zone-selector">
+    <label for="zone-select" class="stat-label"><%= locale.change_zone %></label>
+    <select id="zone-select" name="zone" onchange="this.form.submit()">
+      <% zones.forEach(z => { %>
+      <option value="<%= z.id %>" <%= z.id === zone?.id ? 'selected' : '' %>><%= z.name %> (<%= z.state %>)</option>
+      <% }) %>
+    </select>
+    <input type="hidden" name="lang" value="<%= lang %>">
+  </form>
+</div>
+
+<% if (zone) { %>
+<div class="grid-4" style="margin-bottom:1.5rem">
+  <div class="glass-panel stat-card">
+    <div class="stat-label"><%= locale.risk_level %></div>
+    <div class="stat-value">
+      <span class="risk-badge risk-<%= (zone.riskLevel||'low').toLowerCase().replace(' ','-') %>"><%= zone.riskLevel %></span>
+    </div>
+  </div>
+  <div class="glass-panel stat-card">
+    <div class="stat-label"><%= locale.risk_score %></div>
+    <div class="stat-value tabular-nums"><%= zone.riskScore?.toFixed(1) ?? '—' %> <span style="font-size:0.9rem">/ 5</span></div>
+  </div>
+  <div class="glass-panel stat-card">
+    <div class="stat-label"><%= locale.rainfall_24h %></div>
+    <div class="stat-value tabular-nums"><%= zone.rainfall24h ?? 0 %> <span style="font-size:0.9rem">mm</span></div>
+  </div>
+  <div class="glass-panel stat-card">
+    <div class="stat-label"><%= locale.soil_saturation %></div>
+    <div class="stat-value tabular-nums"><%= zone.soilSaturation ?? 0 %> <span style="font-size:0.9rem">%</span></div>
+  </div>
+</div>
+
+<div class="grid-main-side">
+  <div class="glass-panel" style="padding:1rem">
+    <h2 style="margin-bottom:0.75rem"><%= locale.area_map %></h2>
+    <div id="citizen-map" class="ridge-map" data-map-config='<%= JSON.stringify({ zones: [zone], roads: [], settlements: [] }) %>'></div>
+  </div>
+
+  <div class="glass-panel" style="padding:1rem">
+    <h2 style="margin-bottom:0.75rem"><%= locale.active_alerts %></h2>
+    <div id="citizen-alert-feed"
+         hx-get="/partials/citizen-alerts?zone_id=<%= zone.id %>&lang=<%= lang %>"
+         hx-trigger="every 30s"
+         hx-swap="innerHTML">
+      <%- include('../partials/citizen-alerts', { alerts, locale }) %>
+    </div>
+  </div>
+</div>
+
+<% if (zone.forecastTrajectory?.length) { %>
+<div class="glass-panel" style="padding:1rem;margin-top:1.5rem">
+  <h3 style="margin-bottom:0.75rem"><%= locale.risk_forecast %></h3>
+  <div class="chart-container" style="height:220px">
+    <canvas id="chart-citizen-trajectory" data-trajectory='<%= JSON.stringify(zone.forecastTrajectory) %>'></canvas>
+  </div>
+</div>
+<% } %>
+<% } else { %>
+<div class="glass-panel" style="padding:2rem;text-align:center;color:var(--ridge-muted)">
+  <%= locale.no_zone %>
+</div>
+<% } %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    RidgeMap.init('citizen-map', { single: true });
+    RidgeCharts.trajectory('chart-citizen-trajectory');
+  });
+</script>

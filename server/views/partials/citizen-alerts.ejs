@@ -1,0 +1,16 @@
+<% if (!alerts || alerts.length === 0) { %>
+<div class="alert-feed-empty"><%= locale.no_alerts %></div>
+<% } else { %>
+<ul class="alert-feed-list">
+  <% alerts.forEach(function(alert) { %>
+  <li class="alert-feed-item tier-<%= alert.tier.toLowerCase() %>">
+    <span class="risk-badge risk-<%= alert.tier === 'Warning' ? 'critical' : alert.tier === 'Watch' ? 'moderate' : 'low' %>"><%= alert.tier %></span>
+    <strong><%= alert.zoneName %></strong>
+    <p class="alert-guidance"><%= alert.guidance %></p>
+    <time style="font-size:0.7rem;color:var(--ridge-muted)" datetime="<%= alert.issuedAt %>">
+      <%= formatIST(alert.issuedAt) %>
+    </time>
+  </li>
+  <% }) %>
+</ul>
+<% } %>

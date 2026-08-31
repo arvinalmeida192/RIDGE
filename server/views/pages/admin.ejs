@@ -1,0 +1,101 @@
+<div class="topbar">
+  <div>
+    <h1 class="page-title">Admin / Ops Console</h1>
+    <p class="page-subtitle">Zone management, access requests, and system health</p>
+  </div>
+</div>
+
+<!-- Operational Access Requests -->
+<% if (accessRequests?.length) { %>
+<div class="glass-panel" style="padding:1.5rem;margin-bottom:1.5rem" x-data="accessReview()">
+  <h3 style="margin-bottom:1rem">Pending Operational Access Requests</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Applicant</th><th>Email</th><th>Reason</th><th>Requested (IST)</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% accessRequests.forEach(r => { %>
+      <tr>
+        <td><%= r.displayName || '—' %></td>
+        <td><%= r.email %></td>
+        <td style="max-width:240px;font-size:0.85rem"><%= r.reason || '—' %></td>
+        <td style="font-size:0.8rem;color:var(--ridge-muted)"><%= formatIST(r.createdAt) %></td>
+        <td style="white-space:nowrap">
+          <button @click="review('<%= r.id %>', true)" class="btn btn-primary" style="font-size:0.75rem;padding:0.25rem 0.5rem">Approve</button>
+          <button @click="review('<%= r.id %>', false)" class="btn btn-ghost" style="font-size:0.75rem;padding:0.25rem 0.5rem">Reject</button>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <p x-show="message" x-text="message" :class="error ? 'form-message form-message-error' : 'form-message form-message-success'" style="margin-top:0.75rem"></p>
+</div>
+<script>
+function accessReview() {
+  return {
+    message: '',
+    error: false,
+    async review(id, approve) {
+      this.message = ''
+      try {
+        const res = await fetch(`/api/v1/auth/access-requests/${id}/review`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ approve }),
+        })
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.error || 'Review failed')
+        this.error = false
+        this.message = approve ? 'Access approved.' : 'Request rejected.'
+        setTimeout(() => window.location.reload(), 1200)
+      } catch (err) {
+        this.error = true
+        this.message = err.message
+      }
+    },
+  }
+}
+</script>
+<% } %>
+
+<!-- System Health -->
+<div class="grid-3" style="margin-bottom:1.5rem">
+  <% systemHealth.forEach(comp => { %>
+  <div class="glass-panel stat-card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="font-weight:500"><%= comp.component.replace(/_/g, ' ') %></span>
+      <span class="risk-badge risk-low" style="font-size:0.65rem"><%= comp.status %></span>
+    </div>
+    <p style="font-size:0.75rem;color:var(--ridge-muted);margin-top:0.5rem"><%= comp.message || '' %></p>
+    <% if (comp.lastCheck) { %>
+    <p style="font-size:0.7rem;color:var(--ridge-muted);margin-top:0.35rem">Checked: <%= formatIST(comp.lastCheck) %></p>
+    <% } %>
+  </div>
+  <% }) %>
+</div>
+
+<!-- Zones Table -->
+<div class="glass-panel" style="overflow:hidden">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Zone</th><th>State</th><th>Risk Level</th><th>Score (/5)</th><th>Sensor</th><th>Last Updated (IST)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% zones.forEach(z => { %>
+      <tr>
+        <td><a href="/zones/<%= z.id %>"><%= z.name %></a></td>
+        <td><%= z.state %></td>
+        <td><span class="risk-badge risk-<%= (z.riskLevel||'low').toLowerCase().replace(' ','-') %>"><%= z.riskLevel %></span></td>
+        <td class="tabular-nums"><%= z.riskScore?.toFixed(1) %></td>
+        <td><%= z.sensorStatus %></td>
+        <td style="font-size:0.8rem;color:var(--ridge-muted)"><%= z.lastUpdatedAt ? formatIST(z.lastUpdatedAt) : '—' %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

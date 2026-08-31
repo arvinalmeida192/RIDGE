@@ -1,0 +1,79 @@
+<div class="login-page topo-bg">
+  <div class="login-box glass-panel">
+    <h1>⛰ RIDGE</h1>
+    <p style="text-align:center;color:var(--ridge-muted);margin-bottom:1.5rem;font-size:0.875rem">
+      Operations Login
+    </p>
+
+    <% if (error === 'invalid') { %>
+    <div class="login-error">Invalid username or password</div>
+    <% } else if (error === 'noaccess') { %>
+    <div class="login-error">You do not have operational access. Apply via the Citizen Portal first.</div>
+    <% } else if (error === 'firebase') { %>
+    <div class="login-error">Please sign in with your Firebase account below.</div>
+    <% } %>
+
+    <% if (authMode?.firebaseEnabled && firebaseConfig) { %>
+    <div id="auth-message" class="form-message" style="display:none"></div>
+    <button type="button" id="firebase-google" class="btn btn-google" style="width:100%;justify-content:center;margin-bottom:1rem">
+      Continue with Google
+    </button>
+    <div class="login-divider"><span>or</span></div>
+    <form id="firebase-form">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="firebase-email" required autofocus placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="firebase-password" required placeholder="••••••">
+      </div>
+      <button type="submit" id="firebase-submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:0.5rem">
+        Sign In
+      </button>
+    </form>
+    <p style="text-align:center;margin-top:1rem;font-size:0.75rem;color:var(--ridge-muted)">
+      Need access? <a href="/citizen/login">Citizen Portal</a> → apply for operational access
+    </p>
+    <% } else if (authMode?.legacyLoginEnabled) { %>
+    <form method="POST" action="/login">
+      <input type="hidden" name="next" value="<%= next %>">
+      <input type="hidden" name="loginType" value="operational">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" name="username" required autofocus placeholder="admin">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" required placeholder="••••••">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:0.5rem">
+        Sign In
+      </button>
+    </form>
+    <p style="text-align:center;margin-top:1rem;font-size:0.75rem;color:var(--ridge-muted)">
+      Demo: <code>admin</code> / <code>admin</code>
+    </p>
+    <% } else { %>
+    <p style="text-align:center;color:var(--ridge-muted);font-size:0.875rem">
+      Authentication is not configured. Contact your administrator.
+    </p>
+    <% } %>
+
+    <p style="text-align:center;margin-top:1rem;font-size:0.75rem;color:var(--ridge-muted)">
+      <a href="/">← Back to home</a> · <a href="/citizen/login">Citizen Portal</a>
+    </p>
+  </div>
+</div>
+
+<% if (authMode?.firebaseEnabled && firebaseConfig) { %>
+<script>
+  window.RIDGE_FIREBASE_CONFIG = <%- JSON.stringify(firebaseConfig) %>;
+  window.RIDGE_LOGIN_TYPE = '<%= loginType %>';
+  window.RIDGE_NEXT_URL = <%- JSON.stringify(next) %>;
+  <% if (firebaseEmulator) { %>window.RIDGE_FIREBASE_EMULATOR = '<%= firebaseEmulator %>';<% } %>
+</script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="/js/ridge-firebase-auth.js"></script>
+<% } %>

@@ -1,0 +1,29 @@
+{
+  "version": "v1",
+  "trained_at": "2026-08-31T17:16:31.554430+00:00",
+  "features": [
+    "rainfall_1h",
+    "rainfall_24h",
+    "rainfall_72h",
+    "cumulative_7d",
+    "soil_saturation",
+    "slope_angle",
+    "elevation_m",
+    "historical_events",
+    "seismic_index",
+    "antecedent_wetness"
+  ],
+  "metrics": {
+    "accuracy": 0.9643,
+    "precision": 1.0,
+    "recall": 0.75,
+    "f1": 0.8571,
+    "auc": 1.0,
+    "cv_auc_mean": 1.0,
+    "cv_auc_std": 0.0,
+    "train_samples": 112,
+    "test_samples": 28,
+    "positive_samples": 20,
+    "negative_samples": 120
+  }
+}

@@ -1,0 +1,66 @@
+<div class="topbar">
+  <div>
+    <h1 class="page-title"><%= locale.access_title %></h1>
+    <p class="page-subtitle"><%= locale.access_subtitle %></p>
+  </div>
+</div>
+
+<div class="glass-panel" style="padding:1.5rem;margin-bottom:1.5rem">
+  <% const status = dbUser?.operationalStatus || 'none' %>
+  <% if (status === 'approved' || user?.role === 'admin' || user?.role === 'operator') { %>
+  <p style="color:var(--risk-low);margin-bottom:1rem"><%= locale.access_approved %></p>
+  <a href="/dashboard" class="btn btn-primary"><%= locale.admin_link %></a>
+  <% } else if (status === 'pending') { %>
+  <p style="color:var(--risk-moderate);margin-bottom:0.5rem"><%= locale.access_pending %></p>
+  <p style="font-size:0.875rem;color:var(--ridge-muted)"><%= locale.access_pending_help %></p>
+  <% } else if (status === 'rejected') { %>
+  <p style="color:var(--risk-critical);margin-bottom:1rem"><%= locale.access_rejected %></p>
+  <form id="access-request-form" class="subscribe-form">
+    <div class="form-group">
+      <label><%= locale.access_reason_label %></label>
+      <textarea name="reason" rows="4" required placeholder="<%= locale.access_reason_placeholder %>"
+                style="width:100%;padding:0.5rem;border-radius:6px;border:1px solid var(--ridge-border);background:var(--ridge-surface);color:inherit"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary"><%= locale.access_submit %></button>
+    <p id="access-message" class="form-message" style="display:none"></p>
+  </form>
+  <% } else { %>
+  <p style="font-size:0.9rem;color:var(--ridge-muted);margin-bottom:1rem;line-height:1.6"><%= locale.access_body %></p>
+  <form id="access-request-form" class="subscribe-form">
+    <div class="form-group">
+      <label><%= locale.access_reason_label %></label>
+      <textarea name="reason" rows="4" required placeholder="<%= locale.access_reason_placeholder %>"
+                style="width:100%;padding:0.5rem;border-radius:6px;border:1px solid var(--ridge-border);background:var(--ridge-surface);color:inherit"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary"><%= locale.access_submit %></button>
+    <p id="access-message" class="form-message" style="display:none"></p>
+  </form>
+  <% } %>
+</div>
+
+<script>
+document.getElementById('access-request-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault()
+  const form = e.target
+  const msg = document.getElementById('access-message')
+  const reason = form.reason.value.trim()
+  try {
+    const res = await fetch('/api/v1/auth/request-operational', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ reason }),
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error || 'Request failed')
+    msg.textContent = '<%= locale.access_success %>'
+    msg.className = 'form-message form-message-success'
+    msg.style.display = 'block'
+    setTimeout(() => window.location.reload(), 1500)
+  } catch (err) {
+    msg.textContent = err.message
+    msg.className = 'form-message form-message-error'
+    msg.style.display = 'block'
+  }
+})
+</script>
