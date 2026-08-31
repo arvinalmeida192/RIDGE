@@ -36,8 +36,11 @@ Use the same one-command deploy on any Ubuntu VM:
 
 ```bash
 git clone https://github.com/arvinalmeida192/RIDGE.git && cd RIDGE
+sudo bash scripts/gcp-prepare-vm.sh   # required on GCP e2-micro (1 GB RAM)
 sudo bash scripts/deploy-vm.sh
 ```
+
+**→ Full Google Cloud walkthrough: [docs/GCP-FREE-TIER.md](docs/GCP-FREE-TIER.md)**
 
 ---
 

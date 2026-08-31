@@ -268,18 +268,11 @@ Change the host port in `docker-compose.yml` (e.g. `"3003:3000"` for server) and
 
 ## Production
 
-See **[DEPLOYMENT.md](DEPLOYMENT.md)** for free-tier Oracle Cloud / VPS deployment (one-command install).
+See **[DEPLOYMENT.md](DEPLOYMENT.md)** for deployment options:
 
-```bash
-# On a fresh Ubuntu VM:
-sudo bash scripts/deploy-vm.sh
-```
-
-Or use the production compose file directly:
-
-```bash
-docker compose -f docker-compose.prod.yml up -d --build
-```
+- **[Google Cloud free tier](docs/GCP-FREE-TIER.md)** — $0 VM (recommended if Oracle blocked)
+- **Cloudflare tunnel** — free public URL from your laptop (no VM)
+- **Any VPS** — one-command `scripts/deploy-vm.sh`
 
 ## API overview
 
