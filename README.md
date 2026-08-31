@@ -268,16 +268,18 @@ Change the host port in `docker-compose.yml` (e.g. `"3003:3000"` for server) and
 
 ## Production
 
+See **[DEPLOYMENT.md](DEPLOYMENT.md)** for free-tier Oracle Cloud / VPS deployment (one-command install).
+
+```bash
+# On a fresh Ubuntu VM:
+sudo bash scripts/deploy-vm.sh
+```
+
+Or use the production compose file directly:
+
 ```bash
 docker compose -f docker-compose.prod.yml up -d --build
 ```
-
-Before deploying:
-
-- Set a strong `JWT_SECRET` and `DB_PASSWORD`
-- Configure Firebase or disable legacy login
-- Set `CORS_ORIGINS` to your domain
-- Add a real `MSG91_API_KEY` (or other SMS provider) for notifications
 
 ## API overview
 

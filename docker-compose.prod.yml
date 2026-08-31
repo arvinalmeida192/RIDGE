@@ -64,11 +64,14 @@ services:
       REDIS_URL: redis://redis:6379
       ML_SERVICE_URL: http://ml-service:8000
       DB_MIGRATE_ON_START: "true"
-      DB_SEED_ON_START: "false"
+      DB_SEED_ON_START: ${DB_SEED_ON_START:-true}
       INGESTION_ENABLED: "true"
       SCORING_ENABLED: "true"
       ALERTS_ENABLED: "true"
       NOTIFICATIONS_ENABLED: "true"
+      FIREBASE_SERVICE_ACCOUNT_PATH: /app/firebase-service-account.json
+    volumes:
+      - ./serviceAccountKey.json:/app/firebase-service-account.json:ro
     depends_on:
       postgres:
         condition: service_healthy
