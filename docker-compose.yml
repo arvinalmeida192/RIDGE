@@ -55,7 +55,7 @@ services:
       NODE_ENV: development
       PORT: 3000
       DB_MIGRATE_ON_START: "true"
-      DB_SEED_ON_START: "false"
+      DB_SEED_ON_START: ${DB_SEED_ON_START:-true}
       SCORING_ENABLED: "true"
       ALERTS_ENABLED: "true"
       NOTIFICATIONS_ENABLED: "true"
