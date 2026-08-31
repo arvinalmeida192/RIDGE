@@ -270,9 +270,9 @@ Change the host port in `docker-compose.yml` (e.g. `"3003:3000"` for server) and
 
 See **[DEPLOYMENT.md](DEPLOYMENT.md)** for deployment options:
 
-- **[Google Cloud free tier](docs/GCP-FREE-TIER.md)** — $0 VM (recommended if Oracle blocked)
+- **[AWS free tier](docs/AWS-FREE-TIER.md)** — $0 EC2 for 12 months (recommended)
+- **[Google Cloud free tier](docs/GCP-FREE-TIER.md)** — $0 always-free VM
 - **Cloudflare tunnel** — free public URL from your laptop (no VM)
-- **Any VPS** — one-command `scripts/deploy-vm.sh`
 
 ## API overview
 

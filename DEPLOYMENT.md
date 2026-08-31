@@ -25,22 +25,22 @@ Copy the `https://….trycloudflare.com` URL it prints. Share that link with any
 
 | Provider | Cost | Notes |
 |----------|------|-------|
-| **Google Cloud** e2-micro | $0 always-free | 1 GB RAM — tight; use swap. [cloud.google.com/free](https://cloud.google.com/free) |
-| **AWS** EC2 t2.micro | $0 first 12 months | Same RAM limits as GCP |
-| **Azure** | $200 credits / 30 days | Good for a month-long demo |
-| **Hetzner** CX22 | ~€4/mo | Easiest paid option — signup rarely blocked |
-| **DigitalOcean** | $6/mo or student credits | GitHub Student Pack gives $200 credit |
-| **Railway / Render** | Limited free credits | Hard to run full stack (Postgres + Redis + ML) on free tier |
+| **AWS** EC2 t2.micro | $0 for 12 months | 1 GB RAM — use swap. **[Guide](docs/AWS-FREE-TIER.md)** |
+| **Google Cloud** e2-micro | $0 always-free | 1 GB RAM — [Guide](docs/GCP-FREE-TIER.md) |
+| **Cloudflare tunnel** | $0 | No VM — expose local Docker. See below |
+| **Hetzner** CX22 | ~€4/mo | Easiest paid option |
+| **Railway / Render** | Limited credits | Hard for full Postgres + Redis + ML stack |
 
-Use the same one-command deploy on any Ubuntu VM:
+Use the same deploy on any Ubuntu VM:
 
 ```bash
 git clone https://github.com/arvinalmeida192/RIDGE.git && cd RIDGE
-sudo bash scripts/gcp-prepare-vm.sh   # required on GCP e2-micro (1 GB RAM)
+sudo bash scripts/aws-prepare-vm.sh   # required on t2.micro / e2-micro (1 GB RAM)
 sudo bash scripts/deploy-vm.sh
 ```
 
-**→ Full Google Cloud walkthrough: [docs/GCP-FREE-TIER.md](docs/GCP-FREE-TIER.md)**
+**→ AWS walkthrough: [docs/AWS-FREE-TIER.md](docs/AWS-FREE-TIER.md)**  
+**→ Google Cloud: [docs/GCP-FREE-TIER.md](docs/GCP-FREE-TIER.md)**
 
 ---
 
