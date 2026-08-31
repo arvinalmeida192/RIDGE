@@ -1,6 +1,49 @@
-# Deploying RIDGE (free tier)
+# Deploying RIDGE
 
-This guide deploys the full RIDGE stack (Postgres + PostGIS, Redis, ML service, API/dashboard, nginx) on a **single Linux VM**. This is the recommended **$0/month** path using [Oracle Cloud Always Free](https://www.oracle.com/cloud/free/) or any VPS.
+## No VM? Use a free tunnel (fastest)
+
+If Oracle Cloud (or other VPS signup) is blocked, expose your **local Docker** stack publicly with Cloudflare — **$0, no account required** for quick demos:
+
+```bash
+docker compose up -d          # if not already running
+bash scripts/tunnel-cloudflare.sh
+```
+
+Copy the `https://….trycloudflare.com` URL it prints. Share that link with anyone.
+
+| Pros | Cons |
+|------|------|
+| Works in 30 seconds | URL changes each restart (unless you set up a named tunnel) |
+| No cloud signup | Your PC must stay on + Docker running |
+| Free HTTPS | Not for 24/7 production |
+
+**Firebase:** add the tunnel hostname to Firebase Console → Authentication → Settings → **Authorized domains** (e.g. `spine-eat-expressed-tongue.trycloudflare.com`).
+
+---
+
+## Free / cheap VM alternatives (24/7 hosting)
+
+| Provider | Cost | Notes |
+|----------|------|-------|
+| **Google Cloud** e2-micro | $0 always-free | 1 GB RAM — tight; use swap. [cloud.google.com/free](https://cloud.google.com/free) |
+| **AWS** EC2 t2.micro | $0 first 12 months | Same RAM limits as GCP |
+| **Azure** | $200 credits / 30 days | Good for a month-long demo |
+| **Hetzner** CX22 | ~€4/mo | Easiest paid option — signup rarely blocked |
+| **DigitalOcean** | $6/mo or student credits | GitHub Student Pack gives $200 credit |
+| **Railway / Render** | Limited free credits | Hard to run full stack (Postgres + Redis + ML) on free tier |
+
+Use the same one-command deploy on any Ubuntu VM:
+
+```bash
+git clone https://github.com/arvinalmeida192/RIDGE.git && cd RIDGE
+sudo bash scripts/deploy-vm.sh
+```
+
+---
+
+## VM deployment (Oracle / GCP / Hetzner / etc.)
+
+This deploys the full RIDGE stack (Postgres + PostGIS, Redis, ML service, API/dashboard, nginx) on a **single Linux VM**.
 
 ## What you need
 
