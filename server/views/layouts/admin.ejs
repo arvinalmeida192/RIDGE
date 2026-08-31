@@ -12,7 +12,7 @@
 </head>
 <body class="topo-bg">
 <div class="admin-layout">
-  <aside class="sidebar">
+  <aside class="sidebar" style="display:flex;flex-direction:column">
     <div class="sidebar-logo">⛰ RIDGE</div>
     <nav>
       <a href="/dashboard" class="<%= title === 'Dashboard' ? 'active' : '' %>">Dashboard</a>
@@ -23,6 +23,7 @@
       <a href="/citizen">Citizen Portal</a>
       <a href="/logout" style="margin-top:2rem;color:#ef4444">Logout</a>
     </nav>
+    <p class="ridge-credit">Developed by Los Gatos</p>
   </aside>
   <main class="main-content">
     <%- body %>

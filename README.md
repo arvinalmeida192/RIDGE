@@ -266,14 +266,6 @@ docker compose exec server node src/db/migrate.js
 
 Change the host port in `docker-compose.yml` (e.g. `"3003:3000"` for server) and update bookmarks accordingly.
 
-## Production
-
-See **[DEPLOYMENT.md](DEPLOYMENT.md)** for deployment options:
-
-- **[AWS free tier](docs/AWS-FREE-TIER.md)** — $0 EC2 for 12 months (recommended)
-- **[Google Cloud free tier](docs/GCP-FREE-TIER.md)** — $0 always-free VM
-- **Cloudflare tunnel** — free public URL from your laptop (no VM)
-
 ## API overview
 
 | Endpoint | Description |
@@ -296,3 +288,7 @@ Full API reference: [server/README.md](server/README.md) and [ml-service/README.
 ## License
 
 See repository for license details.
+
+---
+
+Developed by Los Gatos
