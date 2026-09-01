@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title><%= title %> — RIDGE</title>
+  <%- include('../partials/favicon') %>
   <link rel="stylesheet" href="/css/ridge.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/htmx.org@2.0.4"></script>
@@ -11,8 +12,13 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body class="topo-bg">
+<header class="mobile-header">
+  <%- include('../partials/mobile-menu-btn') %>
+  <span class="mobile-header-title">⛰ RIDGE</span>
+</header>
+<div class="sidebar-overlay" hidden></div>
 <div class="admin-layout">
-  <aside class="sidebar" style="display:flex;flex-direction:column">
+  <aside class="sidebar sidebar-inner">
     <div class="sidebar-logo">⛰ RIDGE</div>
     <nav>
       <a href="/dashboard" class="<%= title === 'Dashboard' ? 'active' : '' %>">Dashboard</a>
@@ -37,6 +43,7 @@
     attribution: <%- JSON.stringify(mapTileAttribution) %>
   };
 </script>
+<script src="/js/ridge-mobile.js"></script>
 <script src="/js/ridge-map.js"></script>
 <script src="/js/ridge-charts.js"></script>
 <script src="/js/ridge-app.js"></script>

@@ -2,13 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title><%= title %> — RIDGE</title>
+  <%- include('../partials/favicon') %>
   <link rel="stylesheet" href="/css/ridge.css">
 </head>
 <body class="topo-bg">
 <header class="public-header">
-  <a href="/" class="sidebar-logo" style="text-decoration:none">⛰ RIDGE</a>
+  <a href="/" class="sidebar-logo public-logo">⛰ RIDGE</a>
+  <button type="button" class="public-menu-btn mobile-menu-btn" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
   <nav class="public-nav">
     <% if (user?.role === 'admin' || user?.role === 'operator') { %>
     <a href="/dashboard">Dashboard</a>
@@ -26,5 +30,6 @@
   RIDGE — Risk Intelligence for Dynamic Geohazard Evaluation · NER India<br>
   <span class="ridge-credit" style="display:block;margin-top:0.5rem">Developed by Los Gatos</span>
 </footer>
+<script src="/js/ridge-mobile.js"></script>
 </body>
 </html>
