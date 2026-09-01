@@ -7,6 +7,26 @@ const COOKIE_OPTS = {
   sameSite: 'lax',
 }
 
+export async function signup(req, res, next) {
+  try {
+    const { username, password, email } = req.body
+    if (!username || !password) {
+      return res.status(400).json({ error: 'Username and password are required' })
+    }
+
+    const mode = authService.getAuthMode()
+    if (!mode.legacyLoginEnabled) {
+      return res.status(400).json({ error: 'Use Firebase authentication to create an account' })
+    }
+
+    const result = await authService.registerCitizen(username, password, email)
+    res.status(201).json(result)
+  } catch (err) {
+    if (err.status) return res.status(err.status).json({ error: err.message })
+    next(err)
+  }
+}
+
 export async function login(req, res, next) {
   try {
     const { username, password } = req.body
@@ -118,6 +138,7 @@ export async function authConfig(req, res) {
 }
 
 export default {
+  signup,
   login,
   firebaseAuth,
   firebaseSession,

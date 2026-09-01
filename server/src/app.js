@@ -55,6 +55,7 @@ export function createApp() {
     message: { error: 'Too many login attempts, please try again later' },
   })
   app.use('/api/v1/auth/login', authLimiter)
+  app.use('/api/v1/auth/signup', authLimiter)
 
   app.set('view engine', 'ejs')
   app.set('views', path.join(__dirname, '../views'))

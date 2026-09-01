@@ -19,6 +19,52 @@ function mapUserRow(row) {
   }
 }
 
+export async function registerCitizen(username, password, email = null) {
+  const normalized = username.trim().toLowerCase()
+  if (!/^[a-z0-9_]{3,50}$/.test(normalized)) {
+    throw Object.assign(
+      new Error('Username must be 3–50 characters (letters, numbers, underscore only)'),
+      { status: 400 },
+    )
+  }
+  if (!password || password.length < 6) {
+    throw Object.assign(new Error('Password must be at least 6 characters'), { status: 400 })
+  }
+
+  const { rowCount } = await pool.query('SELECT 1 FROM users WHERE username = $1', [normalized])
+  if (rowCount > 0) {
+    throw Object.assign(new Error('Username already taken'), { status: 409 })
+  }
+
+  const normalizedEmail = email?.trim().toLowerCase() || null
+  if (normalizedEmail) {
+    const { rowCount: emailTaken } = await pool.query(
+      'SELECT 1 FROM users WHERE email = $1',
+      [normalizedEmail],
+    )
+    if (emailTaken > 0) {
+      throw Object.assign(new Error('Email already registered'), { status: 409 })
+    }
+  }
+
+  const passwordHash = await bcrypt.hash(password, 10)
+  const { rows } = await pool.query(
+    `INSERT INTO users (username, password_hash, role, email, operational_status)
+     VALUES ($1, $2, 'citizen', $3, 'none')
+     RETURNING id, username, email, display_name, role, operational_status, preferred_lang`,
+    [normalized, passwordHash, normalizedEmail],
+  )
+
+  const user = rows[0]
+  const token = signToken(user)
+  return {
+    token,
+    role: user.role,
+    username: user.username,
+    expiresIn: env.jwtExpiresIn,
+  }
+}
+
 export async function loginUser(username, password) {
   const normalized = username.trim().toLowerCase()
   const { rows } = await pool.query(
@@ -298,6 +344,7 @@ export function getAuthMode() {
 }
 
 export default {
+  registerCitizen,
   loginUser,
   getUserById,
   authenticateWithFirebase,

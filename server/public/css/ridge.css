@@ -309,6 +309,24 @@ input, select {
 .login-box { width: 100%; max-width: 380px; padding: 2rem; }
 .login-box h1 { text-align: center; margin-bottom: 0.5rem; color: var(--risk-low); }
 .login-error { color: var(--risk-critical); font-size: 0.875rem; margin-bottom: 1rem; text-align: center; }
+.login-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
+.login-tab {
+  flex: 1;
+  text-align: center;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--ridge-muted);
+  text-decoration: none;
+  border: 1px solid var(--ridge-border);
+  background: transparent;
+}
+.login-tab:hover { color: var(--ridge-text); text-decoration: none; }
+.login-tab.active {
+  color: var(--ridge-text);
+  border-color: var(--risk-low);
+  background: rgba(34, 197, 94, 0.08);
+}
 .login-divider { display: flex; align-items: center; gap: 0.75rem; margin: 0 0 1rem; color: var(--ridge-muted); font-size: 0.75rem; }
 .login-divider::before, .login-divider::after { content: ''; flex: 1; height: 1px; background: var(--ridge-border); }
 .btn-google { background: #fff; color: #1f1f1f; border: 1px solid var(--ridge-border); font-weight: 500; }

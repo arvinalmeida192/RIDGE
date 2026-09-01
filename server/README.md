@@ -20,7 +20,7 @@ docker compose up -d --build
 |------|-------------|
 | `/` | Public landing page with live stats |
 | `/login` | Operations login (Firebase or legacy) |
-| `/citizen/login` | Citizen portal login (Firebase sign-up/sign-in) |
+| `/citizen/login` | Citizen portal login and sign-up (Firebase or legacy) |
 | `/dashboard` | Map, alert feed, risk charts |
 | `/zones/:id` | Zone detail — trajectory, SHAP factors, exposure |
 | `/alerts` | Active alerts (read-only) |
@@ -46,6 +46,7 @@ docker compose up -d --build
 | POST | `/api/v1/scenarios/compute` | What-if disaster simulation (admin) |
 | GET | `/api/v1/news` | News items |
 | GET | `/api/v1/auth/config` | Auth mode + Firebase web config |
+| POST | `/api/v1/auth/signup` | Create citizen account (legacy mode only) |
 | POST | `/api/v1/auth/firebase-session` | Exchange Firebase ID token for session cookie |
 | POST | `/api/v1/auth/request-operational` | Citizen applies for ops access |
 | GET | `/api/v1/auth/access-requests` | List pending access requests (admin/operator) |

@@ -97,6 +97,6 @@ describe('Integration: login flow', () => {
   it('GET / shows landing page for unauthenticated users', async () => {
     const res = await request(app).get('/')
     expect(res.status).toBe(200)
-    expect(res.text).toMatch(/Regional Integrated Disaster/i)
+    expect(res.text).toMatch(/Risk Intelligence for Dynamic Geohazard Evaluation/i)
   })
 })

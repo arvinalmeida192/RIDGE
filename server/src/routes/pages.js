@@ -8,6 +8,7 @@ const router = Router()
 router.get('/login', pages.showLogin)
 router.get('/citizen/login', pages.showCitizenLogin)
 router.post('/login', pages.handleLogin)
+router.post('/citizen/signup', pages.handleCitizenSignup)
 router.get('/logout', pages.handleLogout)
 
 router.get('/', optionalPageAuth, pages.showLanding)

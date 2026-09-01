@@ -1,4 +1,4 @@
-# RIDGE — Regional Integrated Disaster & Geohazard Early-Warning System
+# RIDGE — Risk Intelligence for Dynamic Geohazard Evaluation
 
 Real-time landslide risk monitoring for India's North Eastern Region. Ingests live weather data, scores zones with an XGBoost ML model, dispatches tiered alerts, and serves an HTMX/EJS operations dashboard plus a bilingual citizen portal.
 

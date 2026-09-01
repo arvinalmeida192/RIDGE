@@ -42,12 +42,37 @@ export async function showCitizenLogin(req, res, next) {
   renderPage(res, 'login', 'pages/login-citizen', {
     title: 'Citizen Login',
     error: req.query.error,
+    mode: req.query.mode || 'signin',
     next: req.query.next || '/citizen',
     loginType: 'citizen',
     authMode,
     firebaseConfig: getFirebaseWebConfig(),
     firebaseEmulator: process.env.FIREBASE_AUTH_EMULATOR_HOST || '',
   }, next)
+}
+
+export async function handleCitizenSignup(req, res) {
+  const authMode = getAuthMode()
+  if (!authMode.legacyLoginEnabled) {
+    return res.redirect('/citizen/login?error=firebase')
+  }
+  try {
+    const result = await authService.registerCitizen(
+      req.body.username,
+      req.body.password,
+      req.body.email,
+    )
+    res.cookie('ridge_token', result.token, {
+      httpOnly: true,
+      maxAge: 8 * 60 * 60 * 1000,
+      sameSite: 'lax',
+    })
+    res.redirect(req.body.next || '/citizen')
+  } catch (err) {
+    const code = err.status === 409 ? 'taken' : 'invalid'
+    const next = encodeURIComponent(req.body.next || '/citizen')
+    return res.redirect(`/citizen/login?error=${code}&mode=signup&next=${next}`)
+  }
 }
 
 export async function handleLogin(req, res) {

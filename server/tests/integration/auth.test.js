@@ -1,5 +1,6 @@
 import request from 'supertest'
 import { createApp } from '../../src/app.js'
+import * as authService from '../../src/services/authService.js'
 
 const app = createApp()
 
@@ -89,9 +90,57 @@ describe('Login pages', () => {
     expect(res.text).toMatch(/Operations Login/i)
   })
 
-  it('GET /citizen/login renders citizen login', async () => {
+  it('POST /api/v1/auth/signup creates a citizen account', async () => {
+    const username = `citizen_${Date.now()}`
+    const res = await request(app)
+      .post('/api/v1/auth/signup')
+      .send({ username, password: 'testpass123' })
+
+    if (authService.getAuthMode().legacyLoginEnabled) {
+      expect(res.status).toBe(201)
+      expect(res.body.role).toBe('citizen')
+      expect(res.body.username).toBe(username.toLowerCase())
+    } else {
+      expect(res.status).toBe(400)
+    }
+  })
+
+  it('POST /api/v1/auth/signup rejects duplicate usernames', async () => {
+    if (!authService.getAuthMode().legacyLoginEnabled) return
+
+    const res = await request(app)
+      .post('/api/v1/auth/signup')
+      .send({ username: 'user', password: 'newpass123' })
+    expect(res.status).toBe(409)
+  })
+
+  it('POST /citizen/signup creates account and sets session cookie', async () => {
+    if (!authService.getAuthMode().legacyLoginEnabled) return
+
+    const username = `signup_${Date.now()}`
+    const res = await request(app)
+      .post('/citizen/signup')
+      .type('form')
+      .send({ username, password: 'testpass123', next: '/citizen' })
+
+    expect(res.status).toBe(302)
+    expect(res.headers.location).toBe('/citizen')
+    expect(res.headers['set-cookie']).toBeDefined()
+  })
+
+  it('GET /citizen/login renders citizen login with signup option', async () => {
     const res = await request(app).get('/citizen/login')
     expect(res.status).toBe(200)
     expect(res.text).toMatch(/Citizen Portal/i)
+    if (res.text.includes('Create Account') || res.text.includes('Create an account')) {
+      expect(res.text).toMatch(/Create (Account|an account)/i)
+    }
+  })
+
+  it('GET /login does not offer signup', async () => {
+    const res = await request(app).get('/login')
+    expect(res.status).toBe(200)
+    expect(res.text).not.toMatch(/id="firebase-signup"/)
+    expect(res.text).not.toMatch(/Create Account/i)
   })
 })

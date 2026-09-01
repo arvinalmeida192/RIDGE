@@ -5,6 +5,7 @@ import { authenticate, requireRole } from '../middleware/auth.js'
 const router = Router()
 
 router.get('/config', authController.authConfig)
+router.post('/signup', authController.signup)
 router.post('/login', authController.login)
 router.post('/firebase', authController.firebaseAuth)
 router.post('/firebase-session', authController.firebaseSession)
