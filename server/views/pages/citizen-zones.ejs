@@ -1,0 +1,37 @@
+<div class="topbar">
+  <div>
+    <h1 class="page-title"><%= locale.nav_zones %></h1>
+    <p class="page-subtitle"><%= locale.zones_subtitle %></p>
+  </div>
+</div>
+
+<div class="glass-panel" style="padding:1rem;margin-bottom:1.5rem">
+  <h2 style="margin-bottom:0.75rem"><%= locale.all_zones_map %></h2>
+  <p style="font-size:0.8rem;color:var(--ridge-muted);margin-bottom:0.75rem"><%= locale.map_click_hint %></p>
+  <div id="citizen-zones-map" class="ridge-map" data-map-config='<%= JSON.stringify({ ...mapData, detailPath: "/citizen/zones/" }) %>'></div>
+</div>
+
+<div class="grid-2">
+  <% zones.forEach(z => { %>
+  <a href="/citizen/zones/<%= z.id %>?lang=<%= lang %>" class="glass-panel" style="padding:1rem;text-decoration:none;color:inherit;display:block">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem">
+      <div>
+        <div style="font-weight:600;margin-bottom:0.25rem"><%= z.name %></div>
+        <div style="font-size:0.8rem;color:var(--ridge-muted)"><%= z.state %> · <%= z.id %></div>
+      </div>
+      <span class="risk-badge risk-<%= (z.riskLevel || 'low').toLowerCase().replace(' ', '-') %>"><%= z.riskLevel %></span>
+    </div>
+    <div class="grid-2" style="gap:0.5rem;margin-top:0.75rem;font-size:0.8rem">
+      <div><span class="stat-label"><%= locale.risk_score %></span><div class="tabular-nums"><%= z.riskScore?.toFixed(1) ?? '—' %> / 5</div></div>
+      <div><span class="stat-label"><%= locale.rainfall_24h %></span><div class="tabular-nums"><%= z.rainfall24h ?? 0 %> mm</div></div>
+    </div>
+    <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--risk-low)"><%= locale.view_zone_details %> →</div>
+  </a>
+  <% }) %>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    RidgeMap.init('citizen-zones-map');
+  });
+</script>

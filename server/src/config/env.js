@@ -73,6 +73,8 @@ const env = {
     .filter(Boolean),
   firebaseEnabled: process.env.NODE_ENV !== 'test' && Boolean(process.env.FIREBASE_PROJECT_ID),
   legacyLoginEnabled: process.env.NODE_ENV === 'test' || process.env.LEGACY_LOGIN_ENABLED === 'true',
+  mapTileUrl: process.env.MAP_TILE_URL || 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  mapTileAttribution: process.env.MAP_TILE_ATTRIBUTION || '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 }
 
 export default env

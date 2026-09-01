@@ -12,16 +12,6 @@
   </div>
   <% } %>
   <% news.forEach(item => { %>
-  <article class="glass-panel" style="padding:1.25rem">
-    <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem">
-      <span class="risk-badge risk-low" style="font-size:0.65rem"><%= item.tag %></span>
-      <% if (item.state) { %><span style="font-size:0.75rem;color:var(--ridge-muted)"><%= item.state %></span><% } %>
-    </div>
-    <h2 style="font-size:1.1rem;margin-bottom:0.5rem"><%= item.title %></h2>
-    <p style="color:var(--ridge-muted);font-size:0.875rem;line-height:1.5"><%= item.summary %></p>
-    <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--ridge-muted)">
-      <%= item.source %> · <%= formatISTDate(item.timestamp) %>
-    </div>
-  </article>
+  <%- include('../partials/news-article', { item, linkLabel: locale.read_full_article }) %>
   <% }) %>
 </div>

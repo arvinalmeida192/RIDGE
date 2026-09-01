@@ -1,0 +1,107 @@
+<div class="topbar">
+  <div>
+    <a href="/citizen/zones<%= zoneQuery %>" style="font-size:0.8rem;color:var(--ridge-muted)">← <%= locale.nav_zones %></a>
+    <h1 class="page-title"><%= zone.name %></h1>
+    <p class="page-subtitle"><%= zone.state %> · <%= zone.id %></p>
+  </div>
+  <span class="risk-badge risk-<%= (zone.riskLevel || 'low').toLowerCase().replace(' ', '-') %>"><%= zone.riskLevel %></span>
+</div>
+
+<div class="grid-4" style="margin-bottom:1.5rem">
+  <div class="glass-panel stat-card">
+    <div class="stat-label"><%= locale.risk_score %></div>
+    <div class="stat-value tabular-nums"><%= zone.riskScore?.toFixed(1) ?? '—' %> <span style="font-size:0.85rem">/ 5</span></div>
+  </div>
+  <div class="glass-panel stat-card">
+    <div class="stat-label"><%= locale.rainfall_24h %></div>
+    <div class="stat-value tabular-nums"><%= zone.rainfall24h ?? 0 %> mm</div>
+  </div>
+  <div class="glass-panel stat-card">
+    <div class="stat-label"><%= locale.soil_saturation %></div>
+    <div class="stat-value tabular-nums"><%= zone.soilSaturation ?? 0 %>%</div>
+  </div>
+  <div class="glass-panel stat-card">
+    <div class="stat-label"><%= locale.elevation %></div>
+    <div class="stat-value tabular-nums"><%= zone.elevation ?? '—' %> m</div>
+  </div>
+</div>
+
+<div class="glass-panel" style="padding:1rem;margin-bottom:1.5rem">
+  <h2 style="margin-bottom:0.75rem"><%= locale.area_map %></h2>
+  <div id="citizen-zone-map" class="ridge-map" data-map-config='<%= JSON.stringify({ zones: [zone], detailPath: "/citizen/zones/" }) %>'></div>
+</div>
+
+<div class="grid-main-side">
+  <div class="glass-panel" style="padding:1rem">
+    <h3 style="margin-bottom:0.75rem"><%= locale.risk_forecast %></h3>
+    <div class="chart-container" style="height:300px">
+      <canvas id="chart-citizen-zone-trajectory"
+        data-trajectory='<%= JSON.stringify(zone.forecastTrajectory || []) %>'></canvas>
+    </div>
+  </div>
+
+  <div>
+    <div class="glass-panel" style="padding:1rem;margin-bottom:1rem">
+      <h3 style="margin-bottom:0.75rem"><%= locale.causative_factors %></h3>
+      <% if (zone.causativeFactors?.length) { %>
+        <% zone.causativeFactors.forEach(f => { %>
+        <div class="factor-bar">
+          <div class="factor-bar-label">
+            <span><%= f.factor %></span>
+            <span><%= f.contributionPercent %>%</span>
+          </div>
+          <div class="factor-bar-track">
+            <div class="factor-bar-fill" style="width:<%= f.contributionPercent %>%"></div>
+          </div>
+        </div>
+        <% }) %>
+      <% } else { %>
+        <p style="color:var(--ridge-muted);font-size:0.875rem"><%= locale.no_factor_data %></p>
+      <% } %>
+    </div>
+
+    <% if (zone.exposure) { %>
+    <div class="glass-panel" style="padding:1rem">
+      <h3 style="margin-bottom:0.75rem"><%= locale.exposure_assessment %></h3>
+      <p style="font-size:0.8rem;color:var(--ridge-muted);margin-bottom:0.5rem"><%= zone.exposure.exposureSummary %></p>
+      <div class="grid-2" style="gap:0.5rem">
+        <div><span class="stat-label"><%= locale.population %></span><div class="tabular-nums"><%= zone.exposure.estimatedPopulationInRadius?.toLocaleString('en-IN') %></div></div>
+        <div><span class="stat-label"><%= locale.severity %></span><div><%= zone.exposure.severityTier %></div></div>
+        <div><span class="stat-label"><%= locale.roads_at_risk %></span><div><%= zone.exposure.roadNetworkLengthAtRiskKm %> km</div></div>
+        <div><span class="stat-label"><%= locale.structures %></span><div><%= zone.exposure.estimatedStructuresAtRisk %></div></div>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<% if (zone.historicalIncidents?.length) { %>
+<div class="glass-panel" style="padding:1rem;margin-top:1.5rem">
+  <h3 style="margin-bottom:0.75rem"><%= locale.historical_incidents %></h3>
+  <table class="data-table">
+    <thead><tr><th><%= locale.incident_date %></th><th><%= locale.incident_event %></th><th><%= locale.severity %></th></tr></thead>
+    <tbody>
+      <% zone.historicalIncidents.forEach(inc => { %>
+      <tr>
+        <td><%= formatISTDate(inc.date) %></td>
+        <td><%= inc.event %></td>
+        <td><%= inc.severity %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<% } %>
+
+<div style="margin-top:1.5rem;display:flex;gap:0.75rem;flex-wrap:wrap">
+  <a href="/citizen/alerts<%= zoneQuery %>" class="btn btn-primary"><%= locale.nav_alerts %></a>
+  <a href="/citizen/safety<%= zoneQuery %>" class="btn btn-ghost"><%= locale.nav_safety %></a>
+  <a href="/citizen/subscribe<%= zoneQuery %>" class="btn btn-ghost"><%= locale.nav_subscribe %></a>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    RidgeMap.init('citizen-zone-map', { single: true });
+    RidgeCharts.trajectory('chart-citizen-zone-trajectory');
+  });
+</script>

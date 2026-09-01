@@ -17,6 +17,7 @@
     <p class="sidebar-subtitle"><%= locale.portal_title %></p>
     <nav>
       <a href="/citizen<%= zoneQuery %>" class="<%= section === 'home' ? 'active' : '' %>"><%= locale.nav_home %></a>
+      <a href="/citizen/zones<%= zoneQuery || '' %>" class="<%= section === 'zones' ? 'active' : '' %>"><%= locale.nav_zones %></a>
       <a href="/citizen/alerts<%= zoneQuery %>" class="<%= section === 'alerts' ? 'active' : '' %>"><%= locale.nav_alerts %></a>
       <a href="/citizen/safety<%= zoneQuery %>" class="<%= section === 'safety' ? 'active' : '' %>"><%= locale.nav_safety %></a>
       <a href="/citizen/subscribe<%= zoneQuery %>" class="<%= section === 'subscribe' ? 'active' : '' %>"><%= locale.nav_subscribe %></a>
@@ -43,6 +44,12 @@
   </main>
 </div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  window.RIDGE_MAP_TILES = {
+    url: <%- JSON.stringify(mapTileUrl) %>,
+    attribution: <%- JSON.stringify(mapTileAttribution) %>
+  };
+</script>
 <script src="/js/ridge-map.js"></script>
 <script src="/js/ridge-charts.js"></script>
 <script src="/js/ridge-citizen.js"></script>

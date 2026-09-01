@@ -37,11 +37,11 @@
 <div class="grid-main-side">
   <div class="glass-panel" style="padding:1rem">
     <h2 style="margin-bottom:0.5rem">NER Risk Map</h2>
-    <p style="font-size:0.75rem;color:var(--ridge-muted);margin-bottom:0.75rem">Live zone risk · Toggle heatmap / markers · Layer controls</p>
-    <div id="ridge-map" class="ridge-map" data-map-config='<%= JSON.stringify(mapData) %>'></div>
-    <div style="margin-top:0.5rem;display:flex;gap:0.5rem" x-data="{ mode: 'heatmap' }">
-      <button @click="mode='heatmap'; window.RidgeMap?.setMode('heatmap')" class="btn btn-ghost" style="font-size:0.75rem">Heatmap</button>
-      <button @click="mode='markers'; window.RidgeMap?.setMode('markers')" class="btn btn-ghost" style="font-size:0.75rem">Markers</button>
+    <p style="font-size:0.75rem;color:var(--ridge-muted);margin-bottom:0.75rem">Click any coloured marker for area details · Toggle heat overlay</p>
+    <div id="ridge-map" class="ridge-map" data-map-config='<%= JSON.stringify({ ...mapData, detailPath: "/zones/" }) %>'></div>
+    <div style="margin-top:0.5rem;display:flex;gap:0.5rem;flex-wrap:wrap" x-data="{ mode: 'both' }">
+      <button @click="mode='both'; window.RidgeMap?.setMode('heatmap')" class="btn btn-ghost" style="font-size:0.75rem">Heat + Markers</button>
+      <button @click="mode='markers'; window.RidgeMap?.setMode('markers')" class="btn btn-ghost" style="font-size:0.75rem">Markers only</button>
     </div>
   </div>
 

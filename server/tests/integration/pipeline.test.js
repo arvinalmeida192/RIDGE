@@ -100,3 +100,39 @@ describe('Integration: login flow', () => {
     expect(res.text).toMatch(/Risk Intelligence for Dynamic Geohazard Evaluation/i)
   })
 })
+
+describe('Integration: news', () => {
+  it('GET /api/v1/news returns items with source URLs', async () => {
+    const res = await request(app).get('/api/v1/news')
+    expect(res.status).toBe(200)
+    expect(Array.isArray(res.body)).toBe(true)
+    if (res.body.length) {
+      expect(res.body[0]).toHaveProperty('url')
+      expect(res.body[0].url).toMatch(/^https?:\/\//)
+    }
+  })
+
+  it('news pages link to external articles', async () => {
+    const login = await request(app)
+      .post('/login')
+      .type('form')
+      .send({ username: 'user', password: 'user', loginType: 'citizen' })
+    const cookie = login.headers['set-cookie']
+
+    const citizen = await request(app).get('/citizen/news').set('Cookie', cookie)
+    expect(citizen.status).toBe(200)
+    expect(citizen.text).toMatch(/Read full article|সম্পূৰ্ণ প্ৰবন্ধ/)
+    expect(citizen.text).toMatch(/target="_blank"/)
+
+    const opsLogin = await request(app)
+      .post('/login')
+      .type('form')
+      .send({ username: 'admin', password: 'admin' })
+    const opsCookie = opsLogin.headers['set-cookie']
+
+    const ops = await request(app).get('/news').set('Cookie', opsCookie)
+    expect(ops.status).toBe(200)
+    expect(ops.text).toMatch(/Read full article/)
+    expect(ops.text).toMatch(/target="_blank"/)
+  })
+})

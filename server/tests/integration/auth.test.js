@@ -143,4 +143,20 @@ describe('Login pages', () => {
     expect(res.text).not.toMatch(/id="firebase-signup"/)
     expect(res.text).not.toMatch(/Create Account/i)
   })
+
+  it('citizen can browse zones and open zone detail', async () => {
+    const login = await request(app)
+      .post('/login')
+      .type('form')
+      .send({ username: 'user', password: 'user', loginType: 'citizen' })
+    const cookie = login.headers['set-cookie']
+
+    const list = await request(app).get('/citizen/zones').set('Cookie', cookie)
+    expect(list.status).toBe(200)
+    expect(list.text).toMatch(/All Areas|nav_zones/i)
+
+    const detail = await request(app).get('/citizen/zones/z01').set('Cookie', cookie)
+    expect(detail.status).toBe(200)
+    expect(detail.text).toMatch(/z01|Risk Score|risk_score/i)
+  })
 })

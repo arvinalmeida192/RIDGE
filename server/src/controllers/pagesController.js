@@ -298,6 +298,40 @@ export async function showCitizenAccess(req, res, next) {
   } catch (err) { next(err) }
 }
 
+export async function showCitizenZones(req, res, next) {
+  try {
+    const lang = req.query.lang || req.cookies?.ridge_lang || 'en'
+    if (req.query.lang) setLangCookie(res, lang)
+    const locale = loadLocale(lang)
+    const zoneId = req.query.zone || 'z01'
+    const [zones, zone, mapData] = await Promise.all([
+      zoneService.getAllZones(),
+      zoneService.getZoneById(zoneId),
+      zoneService.getMapData(),
+    ])
+    const zoneQuery = `?zone=${zoneId}&lang=${lang}`
+    renderPage(res, 'citizen', 'pages/citizen-zones', {
+      title: 'Citizen Portal', section: 'zones', user: req.user,
+      zones, zone, mapData, lang, locale, zoneQuery,
+    }, next)
+  } catch (err) { next(err) }
+}
+
+export async function showCitizenZoneDetail(req, res, next) {
+  try {
+    const lang = req.query.lang || req.cookies?.ridge_lang || 'en'
+    if (req.query.lang) setLangCookie(res, lang)
+    const locale = loadLocale(lang)
+    const zone = await zoneService.getZoneById(req.params.id)
+    if (!zone) return res.status(404).send('Zone not found')
+    const zoneQuery = `?zone=${zone.id}&lang=${lang}`
+    renderPage(res, 'citizen', 'pages/citizen-zone-detail', {
+      title: 'Citizen Portal', section: 'zones', user: req.user,
+      zone, lang, locale, zoneQuery,
+    }, next)
+  } catch (err) { next(err) }
+}
+
 export async function showNews(req, res, next) {
   try {
     const news = await newsService.getNewsItems({ state: req.query.state })

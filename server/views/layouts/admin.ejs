@@ -31,6 +31,12 @@
 </div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+<script>
+  window.RIDGE_MAP_TILES = {
+    url: <%- JSON.stringify(mapTileUrl) %>,
+    attribution: <%- JSON.stringify(mapTileAttribution) %>
+  };
+</script>
 <script src="/js/ridge-map.js"></script>
 <script src="/js/ridge-charts.js"></script>
 <script src="/js/ridge-app.js"></script>

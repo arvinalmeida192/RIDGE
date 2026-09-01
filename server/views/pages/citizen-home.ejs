@@ -1,7 +1,9 @@
 <div class="topbar">
   <div>
     <h1 class="page-title"><%= locale.nav_home %></h1>
-    <p class="page-subtitle"><%= locale.your_area %>: <strong><%= zone?.name %></strong> · <%= zone?.state %></p>
+    <p class="page-subtitle"><%= locale.your_area %>: <strong><%= zone?.name %></strong> · <%= zone?.state %>
+      <% if (zone) { %> · <a href="/citizen/zones/<%= zone.id %>?lang=<%= lang %>" style="color:var(--risk-low)"><%= locale.view_zone_details %></a><% } %>
+    </p>
   </div>
   <form method="get" action="/citizen" class="zone-selector">
     <label for="zone-select" class="stat-label"><%= locale.change_zone %></label>
@@ -39,7 +41,8 @@
 <div class="grid-main-side">
   <div class="glass-panel" style="padding:1rem">
     <h2 style="margin-bottom:0.75rem"><%= locale.area_map %></h2>
-    <div id="citizen-map" class="ridge-map" data-map-config='<%= JSON.stringify({ zones: [zone], roads: [], settlements: [] }) %>'></div>
+    <p style="font-size:0.8rem;color:var(--ridge-muted);margin-bottom:0.75rem"><%= locale.map_click_hint %></p>
+    <div id="citizen-map" class="ridge-map" data-map-config='<%= JSON.stringify({ zones: [zone], roads: [], settlements: [], detailPath: "/citizen/zones/" }) %>'></div>
   </div>
 
   <div class="glass-panel" style="padding:1rem">

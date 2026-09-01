@@ -22,7 +22,28 @@ function wktLineString(points) {
   return `LINESTRING(${coords})`
 }
 
+export async function upsertNewsItems() {
+  for (const n of newsItems) {
+    await pool.query(
+      `INSERT INTO news_items (external_id, title, summary, source, tag, state, zone_name, published_at, url)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       ON CONFLICT (external_id) DO UPDATE SET
+         title = EXCLUDED.title,
+         summary = EXCLUDED.summary,
+         source = EXCLUDED.source,
+         tag = EXCLUDED.tag,
+         state = EXCLUDED.state,
+         zone_name = EXCLUDED.zone_name,
+         published_at = EXCLUDED.published_at,
+         url = EXCLUDED.url`,
+      [n.id, n.headline, n.summary, n.source, n.tag, n.state ?? null, n.zone ?? null, n.timestamp, n.url ?? null],
+    )
+  }
+}
+
 export async function seedDatabase({ force = false } = {}) {
+  await upsertNewsItems()
+
   const client = await pool.connect()
   try {
     const { rows: existing } = await client.query(
@@ -186,13 +207,13 @@ export async function seedDatabase({ force = false } = {}) {
       }
     }
 
-    // News items
+    // News items (also synced on every startup via upsertNewsItems)
     for (const n of newsItems) {
       await client.query(
-        `INSERT INTO news_items (external_id, title, summary, source, tag, state, zone_name, published_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        `INSERT INTO news_items (external_id, title, summary, source, tag, state, zone_name, published_at, url)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
          ON CONFLICT (external_id) DO NOTHING`,
-        [n.id, n.headline, n.summary, n.source, n.tag, n.state ?? null, n.zone ?? null, n.timestamp],
+        [n.id, n.headline, n.summary, n.source, n.tag, n.state ?? null, n.zone ?? null, n.timestamp, n.url ?? null],
       )
     }
 

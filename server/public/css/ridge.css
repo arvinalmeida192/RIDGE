@@ -160,9 +160,13 @@ input, select {
 
 /* Map */
 #ridge-map, .ridge-map { height: 420px; border-radius: 0.75rem; z-index: 1; }
-.leaflet-container { background: #0f172a !important; border-radius: 0.75rem; }
-.leaflet-popup-content-wrapper { background: #1e293b !important; color: #e2e8f0 !important; border-radius: 0.5rem !important; }
+.leaflet-container { background: #e2e8f0 !important; border-radius: 0.75rem; }
+.leaflet-interactive { cursor: pointer; }
+.leaflet-popup-content-wrapper { background: #1e293b !important; color: #e2e8f0 !important; border-radius: 0.5rem !important; box-shadow: 0 8px 24px rgba(0,0,0,0.35) !important; }
 .leaflet-popup-tip { background: #1e293b !important; }
+.leaflet-popup-content { margin: 0.75rem 1rem !important; font-size: 0.875rem; line-height: 1.5; }
+.map-popup-link { display: inline-block; margin-top: 0.5rem; color: #4ade80 !important; font-weight: 600; text-decoration: none; }
+.map-popup-link:hover { color: #86efac !important; text-decoration: underline; }
 
 /* Alert feed */
 .alert-feed-list { list-style: none; }
@@ -344,6 +348,10 @@ input, select {
 .factor-bar-label { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 0.15rem; }
 .factor-bar-track { height: 6px; background: var(--ridge-border); border-radius: 3px; }
 .factor-bar-fill { height: 100%; background: var(--risk-low); border-radius: 3px; }
+
+/* News articles */
+article.glass-panel h2 a:hover { color: var(--risk-low) !important; text-decoration: underline; }
+article.glass-panel .btn-ghost:hover { color: var(--risk-low); border-color: var(--risk-low); }
 
 /* Responsive */
 @media (max-width: 1024px) {

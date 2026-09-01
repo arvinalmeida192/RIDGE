@@ -64,6 +64,8 @@ export function createApp() {
   app.locals.formatISTTime = formatISTTime
   initFirebase()
   app.locals.firebaseConfig = getFirebaseWebConfig()
+  app.locals.mapTileUrl = env.mapTileUrl
+  app.locals.mapTileAttribution = env.mapTileAttribution
   app.use(express.static(path.join(__dirname, '../public')))
 
   app.use('/', pagesRoutes)
